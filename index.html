@@ -1,18 +1,40 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ollama Chat App</title>
     <style>
+        :root {
+            --primary-color: #6200ea;
+            /* A modern, vibrant colour */
+            --background-color: #f0f0f0;
+            /* Soft background colour for less strain on the eyes */
+            --input-background-color: #ffffff;
+            /* Bright input field for contrast */
+            --border-radius: 20px;
+            /* Rounded corners for a soft UI look */
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            /* Subtle shadow for depth */
+        }
+
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
             padding: 20px;
+            background-color: var(--background-color);
+            color: #333;
+            /* Dark grey colour for text */
         }
 
         #chat-container {
             max-width: 600px;
             margin: 0 auto;
+            background: var(--input-background-color);
+            box-shadow: var(--shadow);
+            border-radius: var(--border-radius);
+            padding: 20px;
         }
 
         #chat-messages {
@@ -21,17 +43,35 @@
             border: 1px solid #ccc;
             padding: 10px;
             margin-bottom: 10px;
+            background-color: #fff;
+            border-radius: var(--border-radius);
         }
 
         #chat-input {
-            width: 100%;
+            width: calc(100% - 20px);
+            /* Adjust width to account for padding */
             padding: 10px;
             font-size: 16px;
+            border: 1px solid #ccc;
+            background-color: var(--input-background-color);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            border: none;
+            /* Remove default border */
+            margin: 0;
+            /* Adjust margin to align with modern design */
+        }
+
+        #chat-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(98, 0, 234, 0.2);
         }
     </style>
 </head>
 
 <body>
+    <h1>Ollama Chat App</h1>
     <div id="chat-container">
         <div id="chat-messages"></div>
         <input type="text" id="chat-input" placeholder="Type your message..." />
