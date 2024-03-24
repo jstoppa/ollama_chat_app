@@ -1,0 +1,44 @@
+// index.html
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Ollama Chat App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+
+        #chat-container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        #chat-messages {
+            height: 400px;
+            overflow-y: scroll;
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+        #chat-input {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="chat-container">
+        <div id="chat-messages"></div>
+        <input type="text" id="chat-input" placeholder="Type your message..." />
+    </div>
+
+    <script src="chat.js"></script>
+</body>
+
+</html>
