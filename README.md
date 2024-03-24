@@ -1,6 +1,6 @@
 # Ollama Chat app
 
-Very simple TypeScript app to connect to Ollama API locally
+Very simple JavaScript Chat app to connect to Ollama API locally
 
 ## Setup
 
