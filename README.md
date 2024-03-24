@@ -2,6 +2,8 @@
 
 Very simple JavaScript Chat app to connect to Ollama API locally
 
+![Alt text](sample-app.png)
+
 ## Setup
 
 1. Setup Ollama locally.
