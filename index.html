@@ -8,38 +8,51 @@
     <style>
         :root {
             --primary-color: #6200ea;
-            /* A modern, vibrant colour */
             --background-color: #f0f0f0;
-            /* Soft background colour for less strain on the eyes */
             --input-background-color: #ffffff;
-            /* Bright input field for contrast */
             --border-radius: 20px;
-            /* Rounded corners for a soft UI look */
             --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            /* Subtle shadow for depth */
         }
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        body,
+        html {
+            height: 100%;
+            /* Ensure the body takes the full height */
             margin: 0;
-            padding: 20px;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: var(--background-color);
             color: #333;
-            /* Dark grey colour for text */
         }
 
         #chat-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            /* Align children to space between */
+            height: calc(100vh - 40px);
+            /* Full height minus padding */
             max-width: 600px;
-            margin: 0 auto;
+            margin: 20px auto;
             background: var(--input-background-color);
             box-shadow: var(--shadow);
             border-radius: var(--border-radius);
             padding: 20px;
+            box-sizing: border-box;
+            /* Include padding in height calculation */
+        }
+
+        .chat-title {
+            font-size: 24px;
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 20px;
         }
 
         #chat-messages {
-            height: 400px;
-            overflow-y: scroll;
+            flex-grow: 1;
+            /* Allow message area to fill available space */
+            overflow-y: auto;
             border: 1px solid #ccc;
             padding: 10px;
             margin-bottom: 10px;
@@ -47,19 +60,27 @@
             border-radius: var(--border-radius);
         }
 
+        #chat-messages::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        #chat-messages::-webkit-scrollbar-track {
+            background: var(--background-color);
+        }
+
+        #chat-messages::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 10px;
+        }
+
         #chat-input {
             width: calc(100% - 20px);
-            /* Adjust width to account for padding */
             padding: 10px;
             font-size: 16px;
-            border: 1px solid #ccc;
             background-color: var(--input-background-color);
             border-radius: var(--border-radius);
-            box-shadow: var(--shadow);
             border: none;
-            /* Remove default border */
-            margin: 0;
-            /* Adjust margin to align with modern design */
+            box-shadow: var(--shadow);
         }
 
         #chat-input:focus {
@@ -72,6 +93,7 @@
 
 <body>
     <div id="chat-container">
+        <div class="chat-title">Ollama Chat App</div>
         <div id="chat-messages"></div>
         <input type="text" id="chat-input" placeholder="Type your message..." />
     </div>
