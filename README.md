@@ -1,12 +1,12 @@
 # Ollama Chat app
 
-Very simple JavaScript Chat app to connect to Ollama API locally
+Very simple JavaScript Chat app to connect to locally hosted Ollama API.
 
 ![Alt text](sample-app.png)
 
 ## Setup
 
-1. Setup Ollama locally.
+1. Setup Ollama locally
 2. Clone repo
 3. Run npm install
 
@@ -14,8 +14,14 @@ Very simple JavaScript Chat app to connect to Ollama API locally
 npm install
 ```
 
-4. Run parcel
+4. Install Parcel
+
+```
+npm install -g parcel-bundler
+```
+
+4. Run app
 
 ```bash
-npx parcel index.html
+parcel index.html
 ```
