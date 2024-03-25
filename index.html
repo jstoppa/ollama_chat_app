@@ -8,6 +8,8 @@
     <style>
         :root {
             --primary-color: #6200ea;
+            --user-message-bg: #dcf8c6;
+            --assistant-message-bg: #ebebeb;
             --background-color: #f0f0f0;
             --input-background-color: #ffffff;
             --border-radius: 20px;
@@ -17,7 +19,6 @@
         body,
         html {
             height: 100%;
-            /* Ensure the body takes the full height */
             margin: 0;
             padding: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -29,9 +30,7 @@
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            /* Align children to space between */
             height: calc(100vh - 40px);
-            /* Full height minus padding */
             max-width: 600px;
             margin: 20px auto;
             background: var(--input-background-color);
@@ -39,7 +38,6 @@
             border-radius: var(--border-radius);
             padding: 20px;
             box-sizing: border-box;
-            /* Include padding in height calculation */
         }
 
         .chat-title {
@@ -51,13 +49,14 @@
 
         #chat-messages {
             flex-grow: 1;
-            /* Allow message area to fill available space */
             overflow-y: auto;
             border: 1px solid #ccc;
             padding: 10px;
             margin-bottom: 10px;
             background-color: #fff;
             border-radius: var(--border-radius);
+            display: flex;
+            flex-direction: column;
         }
 
         #chat-messages::-webkit-scrollbar {
@@ -88,14 +87,53 @@
             border-color: var(--primary-color);
             box-shadow: 0 0 0 2px rgba(98, 0, 234, 0.2);
         }
+
+        .message {
+            max-width: 70%;
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 20px;
+            display: flex;
+        }
+
+        .user-message {
+            margin-left: auto;
+            background-color: var(--user-message-bg);
+        }
+
+        .assistant-message {
+            margin-right: auto;
+            background-color: var(--assistant-message-bg);
+        }
+
+        .input-area {
+            display: flex;
+            align-items: center;
+        }
+
+        .stop-chat-btn {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #ff4444;
+            color: #ffffff;
+            border-radius: var(--border-radius);
+            border: none;
+            cursor: pointer;
+            box-shadow: var(--shadow);
+        }
     </style>
 </head>
 
 <body>
     <div id="chat-container">
         <div class="chat-title">Ollama Chat App</div>
-        <div id="chat-messages"></div>
-        <input type="text" id="chat-input" placeholder="Type your message..." />
+        <div id="chat-messages">
+            <div class="message assistant-message">Hello, how can I assist you?</div>
+        </div>
+        <div class="input-area">
+            <input type="text" id="chat-input" placeholder="Type your message..." />
+            <button class="stop-chat-btn" onclick="stopChat()">Stop Chat</button>
+        </div>
     </div>
 
     <script src="chat.js"></script>

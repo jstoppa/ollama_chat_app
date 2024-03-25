@@ -1,38 +1,59 @@
 import ollama from 'ollama';
 
+// type of messages
+const MessageType = Object.freeze({
+	User: 0,
+	Assistant: 1,
+	Error: 2,
+});
+
+// variable to keep message conversation
+const messages = [];
+
 const chatMessages = document.getElementById('chat-messages');
 const userInput = document.getElementById('chat-input');
+
+// listen to enter key pressed
 userInput.addEventListener('keypress', async (event) => {
 	if (event.key === 'Enter') {
 		const prompt = userInput.value;
 		userInput.value = '';
 
-		appendMessage('User', prompt);
+		appendMessage(MessageType.User, prompt);
+
+		messages.push({ role: 'user', content: prompt });
 
 		try {
 			userInput.disabled = true;
 			const response = await ollama.chat({
 				model: 'llama2',
-				messages: [{ role: 'user', content: prompt }],
+				messages: messages,
 				stream: true,
 			});
 			const responseId = Math.floor(Math.random() * 10000000);
-			addNewMessage('Assistant', responseId);
+			let currentMessage = '';
+			addNewAssistantMessage(responseId);
 
 			for await (const part of response) {
 				if (part?.message?.content) {
+					currentMessage += part.message.content;
 					appendMessage(
-						'Assistant',
+						MessageType.Assistant,
 						part.message.content,
 						responseId
 					);
 				}
 			}
+			if (currentMessage)
+				messages.push({
+					role: 'assistant',
+					content: currentMessage,
+				});
 			userInput.disabled = false;
 			userInput.focus();
 		} catch (error) {
 			appendMessage(
-				'Error',
+				MessageType.Error,
 				'An error occurred while communicating with the API.'
 			);
 			userInput.disabled = false;
@@ -41,15 +62,15 @@ userInput.addEventListener('keypress', async (event) => {
 	}
 });
 
-function addNewMessage(sender, responseId) {
+function addNewAssistantMessage(responseId) {
 	const messageElement = document.createElement('div');
 	messageElement.setAttribute('id', responseId);
-	messageElement.innerHTML = `<strong>${sender}: </strong>`;
+	messageElement.setAttribute('class', 'message assistant-message');
 	chatMessages.appendChild(messageElement);
 	chatMessages.scrollTop = chatMessages.scrollHeight;
 }
 
-function appendMessage(sender, message, messageId) {
+function appendMessage(messageType, message, messageId) {
 	if (messageId) {
 		const messageElement = document.getElementById(messageId);
 		if (message === '\n') messageElement.innerHTML += '<br>';
@@ -57,8 +78,14 @@ function appendMessage(sender, message, messageId) {
 		chatMessages.scrollTop = chatMessages.scrollHeight;
 	} else {
 		const messageElement = document.createElement('div');
-		messageElement.setAttribute('class', 'message user');
-		messageElement.innerHTML = `<strong>${sender}:</strong> ${message}`;
+		switch (messageType) {
+			case MessageType.User:
+				messageElement.setAttribute('class', 'message user-message');
+				break;
+			case MessageType.Error:
+				break;
+		}
+		messageElement.innerHTML = message;
 		chatMessages.appendChild(messageElement);
 		chatMessages.scrollTop = chatMessages.scrollHeight;
 	}
