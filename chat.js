@@ -1,104 +1,100 @@
 import ollama from 'ollama';
 
-// type of messages
-const MessageType = Object.freeze({
-	User: 0,
-	Assistant: 1,
-	Error: 2,
-});
+class ChatController {
+	constructor(ollama) {
+		this.ollama = ollama;
+		this.messages = [];
+		this.stopResponse = false;
+		this.initElements();
+		this.attachEventListeners();
+	}
 
-// variable to keep message conversation
-const messages = [];
-let stopChat = false;
+	initElements() {
+		this.chatMessages = document.getElementById('chat-messages');
+		this.userInput = document.getElementById('chat-input');
+		this.stopChatElement = document.getElementById('stop-chat');
+	}
 
-const chatMessages = document.getElementById('chat-messages');
-const userInput = document.getElementById('chat-input');
-const stopChatElement = document.getElementById('stop-chat');
-stopChatElement.addEventListener('click', function () {
-	stopChat = true;
-});
+	attachEventListeners() {
+		this.stopChatElement.addEventListener(
+			'click',
+			() => (this.stopResponse = true)
+		);
+		this.userInput.addEventListener('keypress', (event) =>
+			this.handleKeyPress(event)
+		);
+	}
 
-// listen to enter key pressed
-userInput.addEventListener('keypress', async (event) => {
-	if (event.key === 'Enter') {
-		const prompt = userInput.value;
-		userInput.value = '';
+	async handleKeyPress(event) {
+		if (event.key === 'Enter') {
+			const prompt = this.userInput.value.trim();
+			this.userInput.value = '';
+			if (!prompt || this.stopResponse) return;
 
-		if (stopChat) stopChat = false;
+			this.appendMessage('user', prompt);
+			this.messages.push({ role: 'user', content: prompt });
+			this.processResponse(prompt);
+		}
+	}
 
-		appendMessage(MessageType.User, prompt);
-
-		messages.push({ role: 'user', content: prompt });
-
+	async processResponse(prompt) {
 		try {
-			userInput.disabled = true;
-			const response = await ollama.chat({
+			this.toggleChat(true);
+			const response = await this.ollama.chat({
 				model: 'llama2',
-				messages: messages,
+				messages: this.messages,
 				stream: true,
 			});
-			const responseId = Math.floor(Math.random() * 10000000);
-			let currentMessage = '';
-			addNewAssistantMessage(responseId);
-
+			const messageId = Date.now();
+			let responseFullContent = '';
 			for await (const part of response) {
 				if (part?.message?.content) {
-					currentMessage += part.message.content;
-					appendMessage(
-						MessageType.Assistant,
+					this.appendMessage(
+						'assistant',
 						part.message.content,
-						responseId
+						messageId
 					);
-					if (stopChat) {
-						stopChat = false;
-						break;
-					}
+					responseFullContent += part.message.content;
 				}
+				if (this.stopResponse) break;
 			}
-			if (currentMessage)
-				messages.push({
+			if (responseFullContent) {
+				this.messages.push({
 					role: 'assistant',
-					content: currentMessage,
+					content: responseFullContent,
 				});
-			userInput.disabled = false;
-			userInput.focus();
+			}
 		} catch (error) {
-			appendMessage(
-				MessageType.Error,
+			console.error('Chat API error:', error);
+			this.appendMessage(
+				'error',
 				'An error occurred while communicating with the API.'
 			);
-			userInput.disabled = false;
-			userInput.focus();
+		} finally {
+			this.stopResponse = false;
+			this.toggleChat(false); // Re-enable input
 		}
 	}
-});
 
-function addNewAssistantMessage(responseId) {
-	const messageElement = document.createElement('div');
-	messageElement.setAttribute('id', responseId);
-	messageElement.setAttribute('class', 'message assistant-message');
-	chatMessages.appendChild(messageElement);
-	chatMessages.scrollTop = chatMessages.scrollHeight;
-}
+	appendMessage(role, message, messageId) {
+		let messageElement;
+		if (messageId) {
+			messageElement = document.getElementById(messageId);
+			if (!messageElement) {
+				messageElement = document.createElement('div');
+				messageElement.setAttribute('id', messageId);
+			}
+		} else messageElement = document.createElement('div');
+		messageElement.className = `message ${role}-message`;
+		messageElement.innerHTML += message.replace(/\n/g, '<br>');
+		this.chatMessages.appendChild(messageElement);
+		this.chatMessages.scrollTop = this.chatMessages.scrollHeight;
+	}
 
-function appendMessage(messageType, message, messageId) {
-	if (messageId) {
-		const messageElement = document.getElementById(messageId);
-		if (message === '\n') messageElement.innerHTML += '<br>';
-		else messageElement.innerHTML += message;
-		chatMessages.scrollTop = chatMessages.scrollHeight;
-	} else {
-		const messageElement = document.createElement('div');
-		switch (messageType) {
-			case MessageType.User:
-				messageElement.setAttribute('class', 'message user-message');
-				break;
-			case MessageType.Error:
-				messageElement.setAttribute('class', 'error-message');
-				break;
-		}
-		messageElement.innerHTML = message;
-		chatMessages.appendChild(messageElement);
-		chatMessages.scrollTop = chatMessages.scrollHeight;
+	toggleChat(disable) {
+		this.userInput.disabled = disable;
+		if (!disable) this.userInput.focus();
 	}
 }
+
+const chatController = new ChatController(ollama);
