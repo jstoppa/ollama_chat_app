@@ -23,5 +23,5 @@ npm install -g parcel-bundler
 4. Run app
 
 ```bash
-parcel index.html
+parcel src/index.html
 ```
