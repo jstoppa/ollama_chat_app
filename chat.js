@@ -9,15 +9,22 @@ const MessageType = Object.freeze({
 
 // variable to keep message conversation
 const messages = [];
+let stopChat = false;
 
 const chatMessages = document.getElementById('chat-messages');
 const userInput = document.getElementById('chat-input');
+const stopChatElement = document.getElementById('stop-chat');
+stopChatElement.addEventListener('click', function () {
+	stopChat = true;
+});
 
 // listen to enter key pressed
 userInput.addEventListener('keypress', async (event) => {
 	if (event.key === 'Enter') {
 		const prompt = userInput.value;
 		userInput.value = '';
+
+		if (stopChat) stopChat = false;
 
 		appendMessage(MessageType.User, prompt);
 
@@ -42,6 +49,10 @@ userInput.addEventListener('keypress', async (event) => {
 						part.message.content,
 						responseId
 					);
+					if (stopChat) {
+						stopChat = false;
+						break;
+					}
 				}
 			}
 			if (currentMessage)

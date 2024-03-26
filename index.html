@@ -106,37 +106,55 @@
             background-color: var(--assistant-message-bg);
         }
 
-        .input-area {
-            display: flex;
-            align-items: center;
+        #chat-input:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(98, 0, 234, 0.2);
         }
 
-        .stop-chat-btn {
-            padding: 10px 20px;
-            font-size: 16px;
-            background-color: #ff4444;
-            color: #ffffff;
-            border-radius: var(--border-radius);
-            border: none;
+        .stop-icon {
+            position: absolute;
+            right: 10px;
+            /* Position inside the right end of the input */
+            width: 15px;
+            height: 15px;
+            background-color: #000000;
+            /* Red stop icon */
             cursor: pointer;
-            box-shadow: var(--shadow);
+        }
+
+        /* Optional: Styling for a square stop icon */
+        .stop-icon:before {
+            content: '';
+            display: block;
+            width: 100%;
+            height: 100%;
+            background-color: #000000;
+            /* Match icon background */
+        }
+
+        .input-area {
+            position: relative;
+            display: flex;
+            align-items: center;
         }
     </style>
 </head>
 
 <body>
+
     <div id="chat-container">
         <div class="chat-title">Ollama Chat App</div>
         <div id="chat-messages">
             <div class="message assistant-message">Hello, how can I assist you?</div>
+            <!-- Placeholder for messages -->
         </div>
         <div class="input-area">
             <input type="text" id="chat-input" placeholder="Type your message..." />
-            <button class="stop-chat-btn" onclick="stopChat()">Stop Chat</button>
+            <div id="stop-chat" class="stop-icon"></div>
         </div>
     </div>
-
     <script src="chat.js"></script>
+
 </body>
 
 </html>
