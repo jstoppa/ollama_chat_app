@@ -7,7 +7,7 @@
     <title>Ollama Chat App</title>
     <style>
         :root {
-            --primary-color: #6200ea;
+            --primary-color: #4A90E2;
             --user-message-bg: #dcf8c6;
             --assistant-message-bg: #ebebeb;
             --background-color: #f0f0f0;
@@ -80,12 +80,13 @@
             border-radius: var(--border-radius);
             border: none;
             box-shadow: var(--shadow);
+            position: relative;
         }
 
         #chat-input:focus {
             outline: none;
             border-color: var(--primary-color);
-            box-shadow: 0 0 0 2px rgba(98, 0, 234, 0.2);
+            box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.5);
         }
 
         .message {
@@ -108,28 +109,27 @@
 
         #chat-input:focus {
             border-color: var(--primary-color);
-            box-shadow: 0 0 0 2px rgba(98, 0, 234, 0.2);
+            box-shadow: 0 0 0 2px rgba(7, 10, 134, 0.2);
         }
 
         .stop-icon {
             position: absolute;
             right: 10px;
-            /* Position inside the right end of the input */
-            width: 15px;
-            height: 15px;
-            background-color: #000000;
-            /* Red stop icon */
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            background-color: #777;
             cursor: pointer;
+            border-radius: 50%;
         }
 
-        /* Optional: Styling for a square stop icon */
         .stop-icon:before {
             content: '';
             display: block;
             width: 100%;
             height: 100%;
-            background-color: #000000;
-            /* Match icon background */
+            background-color: #777;
         }
 
         .input-area {
@@ -137,11 +137,14 @@
             display: flex;
             align-items: center;
         }
+
+        .error-message {
+            color: #a74848;
+        }
     </style>
 </head>
 
 <body>
-
     <div id="chat-container">
         <div class="chat-title">Ollama Chat App</div>
         <div id="chat-messages">
@@ -151,6 +154,7 @@
         <div class="input-area">
             <input type="text" id="chat-input" placeholder="Type your message..." />
             <div id="stop-chat" class="stop-icon"></div>
+
         </div>
     </div>
     <script src="chat.js"></script>

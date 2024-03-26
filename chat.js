@@ -94,6 +94,7 @@ function appendMessage(messageType, message, messageId) {
 				messageElement.setAttribute('class', 'message user-message');
 				break;
 			case MessageType.Error:
+				messageElement.setAttribute('class', 'error-message');
 				break;
 		}
 		messageElement.innerHTML = message;
