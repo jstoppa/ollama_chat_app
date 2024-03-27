@@ -2,7 +2,7 @@
 
 Very simple JavaScript Chat app to connect to locally hosted Ollama API.
 
-![Alt text](sample-app.png)
+![Alt text](sample-app.webp)
 
 ## Setup
 
